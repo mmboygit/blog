@@ -23,8 +23,8 @@ class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
     fun `Assert blog page title, content and status code`() {
         println(">> Assert blog page title, content and status code")
         val entity = restTemplate.getForEntity<String>("/")
-        assertThat(entity.statusCode.toString().equals(HttpStatus.OK).toString(),false)
-        assertThat(entity.body.toString().equals("<h1>Blog</h1>").toString(), false)
+        assertThat(entity.statusCode.toString(),equalTo(HttpStatus.OK))
+        assertThat(entity.body.toString(),equalTo("<h1>Blog</h1>"))
     }
 
     @Test
@@ -32,8 +32,9 @@ class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
         println(">> Assert article page title, content and status code")
         val title = "Reactor Aluminium has landed"
         val entity = restTemplate.getForEntity<String>("/article/${title.toSlug()}")
-        assertThat(entity.statusCode.toString().equals(HttpStatus.OK).toString(),false)
-        assertThat(entity.body.toString().contains(title, "Lorem ipsum", "dolor sit amet"), false)
+        assertThat(entity.statusCode.toString(),equalTo(HttpStatus.OK.toString()))
+        assertThat(entity.body.toString(), anyOf(containsStringIgnoringCase(title),
+            containsStringIgnoringCase("Lorem ipsum"), containsStringIgnoringCase("dolor sit amet")))
     }
 
     @AfterAll
